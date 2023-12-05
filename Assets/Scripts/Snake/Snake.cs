@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(TailGenerator), typeof(SnakeInput))]
 public class Snake : MonoBehaviour
@@ -12,11 +13,14 @@ public class Snake : MonoBehaviour
     private List<Segment> _tail;
     private TailGenerator _tailGenerator;
 
+    public event UnityAction<int> SizeUpdated;
+
     private void Awake()
     {
         _tailGenerator = GetComponent<TailGenerator>();
         _tail = _tailGenerator.Generate();
         _snakeInput = GetComponent<SnakeInput>();
+        SizeUpdated?.Invoke(_tail.Count);
     }
 
     private void FixedUpdate()
