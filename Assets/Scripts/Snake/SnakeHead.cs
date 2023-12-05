@@ -7,6 +7,7 @@ public class SnakeHead : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
 
     public event UnityAction BlockCollided;
+    public event UnityAction<int> BonusCollected;
 
     private void Start()
     {
@@ -19,6 +20,14 @@ public class SnakeHead : MonoBehaviour
         {
             BlockCollided?.Invoke();
             block.Fill();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.TryGetComponent(out Bonus bonus))
+        {
+            BonusCollected?.Invoke(bonus.Collect());
         }
     }
 
