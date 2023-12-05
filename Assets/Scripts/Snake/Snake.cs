@@ -23,6 +23,24 @@ public class Snake : MonoBehaviour
         SizeUpdated?.Invoke(_tail.Count);
     }
 
+    private void OnEnable()
+    {
+        _head.BlockCollided += OnBlockCollided;
+    }
+
+    private void OnDisable()
+    {
+        _head.BlockCollided -= OnBlockCollided;
+    }
+
+    private void OnBlockCollided()
+    {
+        Segment deletedSegment = _tail[_tail.Count - 1];
+        _tail.Remove(deletedSegment);
+        Destroy(deletedSegment.gameObject);
+        SizeUpdated?.Invoke(_tail.Count);
+    }
+
     private void FixedUpdate()
     {
         Move(_head.transform.position + _head.transform.up * _speed * Time.fixedDeltaTime);
