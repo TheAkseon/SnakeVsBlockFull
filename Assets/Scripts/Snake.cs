@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(TailGenerator))]
+[RequireComponent(typeof(TailGenerator), typeof(SnakeInput))]
 public class Snake : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _tailSpringiness;
     [SerializeField] private SnakeHead _head;
-
+    
+    private SnakeInput _snakeInput;
     private List<Segment> _tail;
     private TailGenerator _tailGenerator;
 
@@ -15,11 +16,14 @@ public class Snake : MonoBehaviour
     {
         _tailGenerator = GetComponent<TailGenerator>();
         _tail = _tailGenerator.Generate();
+        _snakeInput = GetComponent<SnakeInput>();
     }
 
     private void FixedUpdate()
     {
         Move(_head.transform.position + _head.transform.up * _speed * Time.fixedDeltaTime);
+
+        _head.transform.up = _snakeInput.GetDirectionToClick(_head.transform.position);
     }
 
     private void Move(Vector3 nextPosition)
